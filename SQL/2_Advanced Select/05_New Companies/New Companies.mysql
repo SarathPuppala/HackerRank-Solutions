@@ -8,3 +8,18 @@ SELECT COMPANY_CODE, FOUNDER,
 (SELECT COUNT(DISTINCT EMPLOYEE_CODE) FROM EMPLOYEE WHERE COMPANY_CODE = C.COMPANY_CODE)
 FROM COMPANY C
 ORDER BY COMPANY_CODE;
+
+
+/*Working approach 2 we just need to use 2 tables.*/
+
+select e.company_code
+, c.founder
+, (select count(distinct lead_manager_code) from Employee e1 where e1.company_code = e.company_code) as 'lead_manager'
+, (select count(distinct senior_manager_code) from Employee e2 where e2.company_code = e.company_code) as 'senior_manager'
+, (select count(distinct manager_code) from Employee e3 where e3.company_code = e.company_code) as 'manager'
+, (select count(distinct employee_code) from Employee e4 where e4.company_code = e.company_code) as 'employee'
+
+from Employee e
+join Company c on e.company_code = c.company_code
+group by e.company_code, c.founder
+order by e.company_code asc;
